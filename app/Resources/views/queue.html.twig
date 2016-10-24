@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>{% block title %}Test Application{% endblock %}</title>
+        <link rel="stylesheet" href="../assets/bootstrap.css" />
+    </head>
+    <body>
+        <div id="page_body">
+            <div id="col-lg-6">
+                <div clas="panel panel-default">
+                    <div class="panel-heading">
+                        <h3>New Customer</h3>
+                    </div>
+                    <div class="panel-body">
+                        <h4>Services</h4>
+                        <div class="list-item-container">
+                            <ul class="list-item" style="list-style: none">
+                                <li>Housing</li>
+                                <li>Benefits</li>
+                                <li>Council Tax</li>
+                                <li>Fly-tipping</li>
+                                <li>Missed Bin</li>
+                            </ul>
+                            
+                            
+                            <div class="btn-group" data-toggle="buttons">
+                              <label class="btn btn-primary active">
+                                <input name="type" value="1" type="checkbox" autocomplete="off" checked> Citizen
+                              </label>
+                              <label class="btn btn-primary">
+                                <input name="type" value="1" type="checkbox" autocomplete="off"> Organisation
+                              </label>
+                              <label class="btn btn-primary">
+                                <input name="type" value="1" type="checkbox" autocomplete="off"> Anonymous
+                              </label>
+                            </div>
+                            
+                            <div class="form-container">
+                                <div id="citizen">
+                                    <label>
+                                        <select id="salutation" name="salutation">
+                                            <option>Mr.</option>
+                                            <option>Mrs.</option>
+                                        </select>
+                                    </label>
+                                <label>
+                                    First name
+                                    <input type="textbox" name="title" value="" name="first_name" placeholder="First Name" />
+                                </label>
+                                 <label>
+                                     Last name
+                                    <input type="textbox" name="title" value="" name="last_name" placeholder="Last Name" />
+                                </label>
+                                 </div>
+                                <div id="organisation">
+                                    <label>
+                                        <input type="textbox" value="" name="organisation_name" placeholder="Organisation Name" />
+                                    </label>
+                                </div>
+                                <div id="anonymous">
+                                    &nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="col-lg-6">
+                <div clas="panel panel-default">
+                    <div class="panel-heading">
+                        <h3>Queue</h3>
+                    </div>
+                    <div class="panel-body">
+                        <h4>List of customers being queued</h4>
+                        <div class="list-item-container">
+                            <table class="table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Type</th>
+                                        <th>Name</th>
+                                        <th>Service</th>
+                                        <th>Queued at</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for queue in queues %}
+                                        <tr>
+                                            <td>{{ queue.type }}</td>
+                                            <td>{{ queue.salutation }}&nbsp;{{ queue.first_name }}&nbsp;{{ queue.last_name }}</td>
+                                            <td>{{ queue.service }}</td>
+                                            <td>{{ queue.created }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</body>
+</html>

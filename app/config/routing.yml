@@ -1,0 +1,7 @@
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+
+queue:
+    path: /queue
+    defaults: { _controller: AppBundle:Queue:queue }
