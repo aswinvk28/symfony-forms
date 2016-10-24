@@ -10,16 +10,6 @@ framework:
 web_profiler:
     toolbar: true
     intercept_redirects: false
-    
-doctrine:
-    dbal:
-        driver:   pdo_mysql
-        host:     "localhost%"
-        port:     "3306"
-        dbname:   "symfony_forms"
-        user:     "root"
-        password: ""
-        charset:  UTF8
 
 #monolog:
 #    handlers:

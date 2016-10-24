@@ -5,3 +5,7 @@ app:
 queue:
     path: /queue
     defaults: { _controller: AppBundle:Queue:queue }
+    
+queue_submit:
+    path: /submit
+    defaults: { _controller: AppBundle:Queue:submit }

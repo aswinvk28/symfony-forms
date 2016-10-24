@@ -18,6 +18,31 @@ use AppBundle\Entity\Queue;
 class QueueController extends Controller {
     public function queueAction()
     {
+        try {
+            $em = $this->getDoctrine()->getManager();
+            $query = $em->createQuery(
+            'SELECT first_name, last_name, type, service, organisation, salutation
+            FROM AppBundle:queue'
+            );
+            $customerList = $query->getResult();
+        } catch (Exception $ex) {
+            throw new Exception($ex->getMessage());
+        }
+        
+        try {
+            $content = $this->render(
+            'queue.html.twig',
+                array('queue' => $customerList)
+            );
+        } catch (Exception $ex) {
+            throw new Exception($ex->getMessage());
+        }
+        
+        return new Response($content);
+    }
+    
+    public function submitAction()
+    {
         $request = Request::createFromGlobals();
         
         $first_name = $request->request->get('first_name');
@@ -31,13 +56,27 @@ class QueueController extends Controller {
         
         $queue = new Queue();
         
-        $queue->setFirstname($first_name);
-        $queue->setLastname($last_name);
-        $queue->setType($type);
-        $queue->setService($service);
-        $queue->setSalutation($salutation);
-        $queue->setOrganisation($organisation);
-        $queue->setCreated($created);
+        if(!empty($first_name)) {
+            $queue->setFirstname($first_name);
+        }
+        if(!empty($last_name)) {
+            $queue->setLastname($last_name);
+        }
+        if(!empty($type)) {
+            $queue->setType($type);
+        }
+        if(!empty($service)) {
+            $queue->setService($service);
+        }
+        if(!empty($salutation)) {
+            $queue->setSalutation($salutation);
+        }
+        if(!empty($organisation)) {
+            $queue->setOrganisation($organisation);
+        }
+        if(!empty($created)) {
+            $queue->setCreated($created);
+        }
         
         $em = $this->getDoctrine()->getManager();
         $em->persist($queue);
@@ -46,8 +85,8 @@ class QueueController extends Controller {
         
         $em = $this->getDoctrine()->getManager();
         $query = $em->createQuery(
-        'SELECT *
-        FROM queue'
+        'SELECT first_name, last_name, type, service, organisation, salutation
+            FROM AppBundle:queue'
         );
         $customerList = $query->getResult();
         

@@ -8,6 +8,8 @@
 
 namespace AppBundle\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
 /**
 * @ORM\Entity
 * @ORM\Table(name="queue")
@@ -15,70 +17,85 @@ namespace AppBundle\Entity;
 class Queue {
     
     /**
-    * @ORM\Column(type="type", length=255)
+    * @ORM\Column(type="string", length=255)
     */
-    public $type;
+    protected $type;
     
     /**
     * @ORM\Column(type="string", length=255)
     */
-    public $first_name;
+    protected $first_name;
     
     /**
     * @ORM\Column(type="string", length=255)
     */
-    public $last_name;
+    protected $last_name;
     
     /**
     * @ORM\Column(type="string", length=50)
     */
-    public $salutation;
+    protected $salutation;
     
     /**
-    * @ORM\Column(type="datetime")
+    * @ORM\Column(type="string")
     */
-    public $created;
+    protected $created;
     
     /**
     * @ORM\Column(type="string", length=255)
     */
-    public $organisation;
+    protected $organisation;
+    
+    /**
+    * @ORM\Column(type="string", length=255)
+    */
+    protected $service;
     
     /**
     * @ORM\Column(type="integer")
     * @ORM\Id
     * @ORM\GeneratedValue(strategy="AUTO")
     */
-    public $id;
+    protected $id;
     
     public function getType()
     {
-        return $type;
+        return $this->type;
     }
     
     public function getSalutation() 
     {
-        return $salutation;
+        return $this->salutation;
     }
     
     public function getCreated()
     {
-        return $created;
+        return $this->created;
     }
     
     public function getFirstname()
     {
-        return $first_name;
+        return $this->first_name;
     }
     
     public function getLastname()
     {
-        return $last_name;
+        return $this->last_name;
     }
     
     public function getOrganisation()
     {
-        return $organisation;
+        return $this->organisation;
+    }
+    
+    public function getService()
+    {
+        return $this->service;
+    }
+    
+    public function setService($service)
+    {
+        $this->service = $service;
     }
     
     public function setType($type)
@@ -86,28 +103,28 @@ class Queue {
         return $this->type = $type;
     }
     
-    public function setSalutation() 
+    public function setSalutation($salutation) 
     {
-        return $salutation;
+        return $this->salutation = $salutation;
     }
     
-    public function setCreated()
+    public function setCreated($created)
     {
-        return $created;
+        return $this->created = $created;
     }
     
-    public function setFirstname()
+    public function setFirstname($first_name)
     {
-        return $first_name;
+        return $this->first_name = $first_name;
     }
     
-    public function setLastname()
+    public function setLastname($last_name)
     {
-        return $last_name;
+        return $this->last_name = $last_name;
     }
     
-    public function setOrganisation()
+    public function setOrganisation($organisation)
     {
-        return $organisation;
+        return $this->organisation = $organisation;
     }
 }
