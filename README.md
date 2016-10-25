@@ -28,5 +28,5 @@ Added to the existing AppBundle
 
 The project is setup at symfony.forms.com in a php localhost environment
 
-Navigate to http://symfony.forms.com/queue
+Navigate to http://symfony.forms.com/symfony-forms/web/queue
 
