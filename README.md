@@ -2,26 +2,27 @@
 
 # Installation
 
-composer create-project symfony/framework-standard-edition "G:\Vagrant\Forms.Symfony"
+composer create-project symfony/framework-standard-edition "root folder"
 DB_NAME: symfony_forms
+
 TABLE_NAME: 
 queue, 
 service
 
 # DB Initialisation
 
-php app/console doctrine:schema:update --force
-
-
+Execute the SQL scripts
 
 # Tasks undertaken during development
 
 CREATE DATABASE symfony_forms;
 USE DATABASE symfony_forms;
 
+SCHEMA and DATA are provided in the sql folder of the Resources directory of the Application
+
 # Bundle Initialisation
 
-php app/console doctrine:generate:entity --entity:"AppBundle\Queue"
+Added to the existing AppBundle
 
 # Navigate to the URL mentioned in this box
 
