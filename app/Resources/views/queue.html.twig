@@ -3,80 +3,83 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>{% block title %}Test Application{% endblock %}</title>
-        <link rel="stylesheet" href="../assets/bootstrap.css" />
+        <link rel="stylesheet" href="assets/bootstrap.min.css" />
+        <script type="text/javascript" src="assets/jquery.min.js"></script>
+        <script type="text/javascript" src="assets/bootstrap.min.js"></script>
     </head>
     <body>
         <div id="page_body">
-            <div id="col-lg-6">
-                <form action="/submit" method="POST">
-                    <div clas="panel panel-default">
+            <div class="col-lg-6">
+                <form action="submit" method="POST">
+                    <div class="panel panel-default">
                         <div class="panel-heading">
                             <h3>New Customer</h3>
                         </div>
                         <div class="panel-body">
                             <h4>Services</h4>
                             <div class="list-item-container">
-                                <ul class="list-item" style="list-style: none">
-                                    <li>Housing</li>
-                                    <li>Benefits</li>
-                                    <li>Council Tax</li>
-                                    <li>Fly-tipping</li>
-                                    <li>Missed Bin</li>
+                                <ul class="list-item list-unstyled" style="list-style: none">
+                                    {% for service in services %}
+                                        <li class="list-unstyled"><input type="radio" value="{{ service.name }}" name="service" />&nbsp;{{ service.name }}</li>
+                                    {% endfor %}
                                 </ul>
-
-
-                                <div class="btn-group" data-toggle="buttons">
-                                  <label class="btn btn-primary active">
-                                    <input name="type" value="1" type="checkbox" autocomplete="off" checked> Citizen
-                                  </label>
-                                  <label class="btn btn-primary">
-                                    <input name="type" value="1" type="checkbox" autocomplete="off"> Organisation
-                                  </label>
-                                  <label class="btn btn-primary">
-                                    <input name="type" value="1" type="checkbox" autocomplete="off"> Anonymous
-                                  </label>
+                                <div class="btn-group" data-toggle="buttons" style="margin-top:20px">
+{#                                  <label class="btn btn-primary active" onclick="showCitizen();">#}
+                                    <input id="chk_cit" name="type" value="1" type="checkbox" autocomplete="off"> Citizen
+{#                                  </label>#}
+{#                                  <label class="btn btn-primary" onclick="showOrganisation();">#}
+                                    <input id="chk_org" name="type" value="2" type="checkbox" autocomplete="off"> Organisation
+{#                                  </label>#}
+{#                                  <label class="btn btn-primary" onclick="showAnonymous();">#}
+                                    <input id="chk_ano" name="type" value="3" type="checkbox" autocomplete="off"> Anonymous
+{#                                  </label>#}
                                 </div>
 
-                                <div class="form-container">
+                                <div class="form-container" style="margin-top:20px">
                                     <div id="citizen">
-                                        <label>
-                                            <select id="salutation" name="salutation">
-                                                <option>Mr.</option>
-                                                <option>Mrs.</option>
+                                        <div class="form-group">
+                                            <label>Salutation</label>
+                                            <select class="form-control" id="salutation" name="salutation">
+                                                <option value="Mr.">Mr.</option>
+                                                <option value="Mrs.">Mrs.</option>
                                             </select>
-                                        </label>
-                                    <label>
-                                        First name
-                                        <input type="textbox" name="title" value="" name="first_name" placeholder="First Name" />
-                                    </label>
-                                     <label>
-                                         Last name
-                                        <input type="textbox" name="title" value="" name="last_name" placeholder="Last Name" />
-                                    </label>
-                                     </div>
-                                    <div id="organisation">
-                                        <label>
-                                            <input type="textbox" value="" name="organisation_name" placeholder="Organisation Name" />
-                                        </label>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>First name</label>
+                                            <input class="form-control" type="textbox" value="" name="first_name" placeholder="First Name" />
+                                        </div>
+                                         <div class="form-group">
+                                             <label>Last name</label>
+                                            <input class="form-control" type="textbox" value="" name="last_name" placeholder="Last Name" />
+                                        </div>
                                     </div>
-                                    <div id="anonymous">
+                                    <div id="organisation" style="display:none">
+                                        <div class="form-group">
+                                            <label>Organisation Name</label>
+                                            <input class="form-control" type="textbox" value="" name="organisation" placeholder="Organisation Name" />
+                                        </div>
+                                    </div>
+                                    <div id="anonymous" style="display:none">
                                         &nbsp;
                                     </div>
-                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top:20px">
+                                <input type="submit" value="Submit" name="submit" class="btn btn-primary" />
                             </div>
                         </div>
                     </div>
+                    </div>
                 </form>
             </div>
-            <div id="col-lg-6">
-                <div clas="panel panel-default">
+            <div class="col-lg-6">
+                <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3>Queue</h3>
                     </div>
                     <div class="panel-body">
                         <h4>List of customers being queued</h4>
                         <div class="list-item-container">
-                            <table class="table-striped">
+                            <table class="table-bordered table table-striped" style="margin-top:20px">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -89,8 +92,9 @@
                                 <tbody>
                                     {% for queue in queues %}
                                         <tr>
+                                            <td>{{ queue.id }}</td>
                                             <td>{{ queue.type }}</td>
-                                            {% if (queue.type == 'organisation') %}
+                                            {% if (queue.type == 'Organisation') %}
                                                 <td>{{ queue.organisation }}</td>
                                             {% else %}
                                                 <td>{{ queue.salutation }}&nbsp;{{ queue.first_name }}&nbsp;{{ queue.last_name }}</td>
@@ -106,5 +110,33 @@
                 </div>
             </div>
         </div>
-</body>
+        <script type="text/javascript">
+            function showCitizen() {
+                $('#citizen').show();
+                document.getElementById("chk_cit").checked = true;
+                document.getElementById("chk_ano").checked = false;
+                document.getElementById("chk_org").checked = false;
+                $('#anonymous').hide();
+                $('#organisation').hide();
+            }
+            
+            function showAnonymous() {
+                $('#anonymous').show();
+                document.getElementById("chk_ano").checked = true;
+                document.getElementById("chk_cit").checked = false;
+                document.getElementById("chk_org").checked = false;
+                $('#citizen').hide();
+                $('#organisation').hide();
+            }
+            
+            function showOrganisation() {
+                $('#organisation').show();
+                document.getElementById("chk_org").checked = true;
+                document.getElementById("chk_cit").checked = false;
+                document.getElementById("chk_ano").checked = false;
+                $('#citizen').hide();
+                $('#anonymous').hide();
+            }
+        </script>
+    </body>
 </html>

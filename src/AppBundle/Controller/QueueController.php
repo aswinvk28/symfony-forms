@@ -15,24 +15,32 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use AppBundle\Entity\Queue;
 
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\DBAL\Statement;
+
 class QueueController extends Controller {
     public function queueAction()
     {
         try {
-            $em = $this->getDoctrine()->getManager();
-            $query = $em->createQuery(
-            'SELECT first_name, last_name, type, service, organisation, salutation
-            FROM AppBundle:queue'
-            );
-            $customerList = $query->getResult();
-        } catch (Exception $ex) {
-            throw new Exception($ex->getMessage());
+            /** Query queues from the database for retrieval of the queue entry entered **/
+            $stmt = new Statement("SELECT id, first_name, last_name, type, service, organisation, salutation FROM queue", 
+                    $this->getDoctrine()->getConnection());
+            $stmt->execute();
+            $customerList = $stmt->fetchAll();
+            
+            /** Query services from the database for retrieval of the list displayed **/
+            $stmt = new Statement("SELECT name FROM service",
+                    $this->getDoctrine()->getConnection());
+            $stmt->execute();
+            $serviceList = $stmt->fetchAll();
+        } catch (\Exception $ex) {
+            throw new \Exception($ex->getMessage());
         }
         
         try {
-            $content = $this->render(
+            $content = $this->renderView(
             'queue.html.twig',
-                array('queue' => $customerList)
+                array('queues' => $customerList, 'services' => $serviceList)
             );
         } catch (Exception $ex) {
             throw new Exception($ex->getMessage());
@@ -52,47 +60,46 @@ class QueueController extends Controller {
         $salutation = $request->request->get('salutation');
         $organisation = $request->request->get('organisation');
         
-        $created = date('Y/m/d H:i:s');
+        $created = date('Y-m-d H:i:s');
         
         $queue = new Queue();
         
-        if(!empty($first_name)) {
-            $queue->setFirstname($first_name);
-        }
-        if(!empty($last_name)) {
-            $queue->setLastname($last_name);
-        }
         if(!empty($type)) {
-            $queue->setType($type);
-        }
-        if(!empty($service)) {
-            $queue->setService($service);
-        }
-        if(!empty($salutation)) {
-            $queue->setSalutation($salutation);
-        }
-        if(!empty($organisation)) {
-            $queue->setOrganisation($organisation);
-        }
-        if(!empty($created)) {
-            $queue->setCreated($created);
+            if($type == 1) {
+                $type = 'Citizen';
+            } else if($type == 2) {
+                $first_name = '';
+                $last_name = '';
+                $salutation = '';
+                $type = 'Organisation';
+            } else if($type == 3) {
+                $type = 'Anonymous';
+            }
         }
         
-        $em = $this->getDoctrine()->getManager();
-        $em->persist($queue);
+        $insert = new Statement("INSERT INTO queue (first_name, last_name, type, service, organisation, salutation) "
+                . "VALUES ('{$first_name}', '{$last_name}', '{$type}', '{$service}', '{$organisation}', '{$salutation}')",
+                $this->getDoctrine()->getConnection());
         
-        $em->flush();
+        try {
+            $insert->execute();
+        } catch (\Exception $ex) {
+            throw new \Exception($ex->getMessage());
+        }
         
-        $em = $this->getDoctrine()->getManager();
-        $query = $em->createQuery(
-        'SELECT first_name, last_name, type, service, organisation, salutation
-            FROM AppBundle:queue'
-        );
-        $customerList = $query->getResult();
+        $stmt = new Statement("SELECT id, first_name, last_name, type, service, organisation, salutation FROM queue", 
+                $this->getDoctrine()->getConnection());
+        $stmt->execute();
+        $customerList = $stmt->fetchAll();
+
+        $stmt = new Statement("SELECT name FROM service",
+                $this->getDoctrine()->getConnection());
+        $stmt->execute();
+        $serviceList = $stmt->fetchAll();
         
-        $content = $this->render(
+        $content = $this->renderView(
         'queue.html.twig',
-            array('queue' => $customerList)
+            array('queues' => $customerList, 'services' => $serviceList)
         );
         
         return new Response($content);
