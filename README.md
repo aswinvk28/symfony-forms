@@ -25,7 +25,7 @@ php app/console doctrine:generate:entity --entity:"AppBundle\Queue"
 
 # Navigate to the URL mentioned in this box
 
-The project is setup at localhost:9999 in a php localhost environment
+The project is setup at symfony.forms.com in a php localhost environment
 
-Navigate to http://localhost:9999/queue
+Navigate to http://symfony.forms.com/queue
 
