@@ -15,24 +15,33 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use AppBundle\Entity\Queue;
 
-use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\DBAL\Statement;
 
 class QueueController extends Controller {
     public function queueAction()
     {
         try {
-            /** Query queues from the database for retrieval of the queue entry entered **/
-            $stmt = new Statement("SELECT id, first_name, last_name, type, service, organisation, salutation FROM queue", 
-                    $this->getDoctrine()->getConnection());
-            $stmt->execute();
-            $customerList = $stmt->fetchAll();
+            /** Doctrine Query queues from the database for retrieval of the queue entry entered **/
             
-            /** Query services from the database for retrieval of the list displayed **/
-            $stmt = new Statement("SELECT name FROM service",
-                    $this->getDoctrine()->getConnection());
-            $stmt->execute();
-            $serviceList = $stmt->fetchAll();
+            $em = $this->getDoctrine()->getManager();
+            
+            $resultSetMapping = new ResultSetMappingBuilder($em);
+            $resultSetMapping->addRootEntityFromClassMetadata('AppBundle\Entity\Queue', 'q');
+            
+            $query = $em->createNativeQuery("SELECT q.id, q.first_name, q.last_name, q.type, q.service, q.organisation, q.salutation, q.created FROM queue q", $resultSetMapping);
+            
+            $customerList = $query->getResult();
+            
+            /** Doctrine Query services from the database for retrieval of the list displayed **/
+            
+            $resultSetMappingService = new ResultSetMappingBuilder($em);
+            $resultSetMappingService->addRootEntityFromClassMetadata('AppBundle\Entity\Service', 's');
+            
+            $queryService = $em->createNativeQuery("SELECT s.id, s.name FROM service s", $resultSetMappingService);
+            
+            $serviceList = $queryService->getResult();
+
         } catch (\Exception $ex) {
             throw new \Exception($ex->getMessage());
         }
